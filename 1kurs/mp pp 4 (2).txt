@@ -1,0 +1,283 @@
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <chrono>
+using namespace std;
+using namespace std::chrono;
+
+int main()
+{
+	setlocale(LC_ALL, "rus");
+	
+	
+	auto start = high_resolution_clock::now();
+	for (int r = 1; r <= 10; r++)
+	{
+		int start = 0;
+		int end = 0;
+		int i = 0, counter = 0, max_counter = 0, begin = 0, j = 0;
+		int maxindex = 0;
+
+		vector <char> vec;
+		ifstream file;
+		file.open("C:\\Users\\polik\\Desktop\\file.txt");
+		if (!file.is_open())
+		{
+			cout << " Ошибка открытия файла ввода ";
+			return 0;
+		}
+
+		char c;
+		while (file.get(c))
+		{
+
+			vec.push_back(c);         //запись из файла в вектор  
+		}
+		cout << endl;
+		file.close();
+
+
+		do
+		{
+			for (i = begin; isalpha(vec[i]) && i < vec.size() - 1; i++)  //если буква и i не конец строки
+			{
+				counter = counter + 1;                   //счетчик по кол-ву букв в слове
+				if (counter >= max_counter)
+				{
+					max_counter = counter;              // проверка максимальное ли кол-во
+				}
+			}
+
+			while (!isalpha(vec[i]) && i < vec.size() - 1)    //если встречает НЕ букву
+			{
+				i += 1;                                //скипаем ячейку и обнуляем счетчик
+				counter = 0;
+			}
+
+			begin = i;
+
+		} while (i < vec.size() - 1);
+
+		begin = 0;
+
+		do
+		{
+			for (i = begin; isalpha(vec[i]) && i < vec.size() - 1; i++)
+			{
+				counter = counter + 1;    // встречает букву - накидывает счетчик и как только счетчик будет равен максу то начинается иф
+
+
+				if (counter == max_counter)   // если счетчик равен максимум 
+				{
+					max_counter = counter;
+					end = i;          //в вектор КОНЕЦ СЛОВА засовывает номер ячейки 
+					/*!!!!*/	//start = (i - counter + 1);
+					start = (counter + 1);
+
+				} // это для того чтобы от номера 1й буквы слова до номера последней буквы слова пройтись потом
+			}
+
+
+			while (!isalpha(vec[i]) && i < vec.size() - 1)  // если ноль то скипаем и обнуляем счетчик
+			{
+				i += 1;
+				counter = 0;
+			}
+			begin = i;
+
+
+		} while (i < vec.size() - 1);
+
+
+		cout << "Строка с файла: " << endl;
+
+
+		for (i = 0; i < vec.size() - 1; i++)  //вывод данных из файла
+		{
+			cout << vec[i];
+		}
+
+
+		for (int i = start; i < end; i++)
+		{
+			if (vec[i] == 'a')
+				vec[i] = 'b';
+		}
+
+		cout << endl;
+		cout << "Итоговая строка: " << endl;
+		for (int i = 0; i < vec.size() - 1; i++)
+		{
+			cout << vec[i];            // вывод с изменениями
+		}
+
+		ofstream file2;
+
+		file.open("C:\\Users\\polik\\Desktop\\file2.txt");
+		if (!file.is_open())
+		{
+			cout << " Ошибка открытия файла вывода ";
+			return 0;
+		}
+
+		for (int i = 0; i < vec.size() - 1; i++)
+		{
+			file2 << vec[i];                    //перезапись в файл 
+		}
+		file2.close();
+
+	}
+	auto stop = high_resolution_clock::now();
+	auto duration = duration_cast<microseconds>(stop - start);
+	cout << " время за которое была выполнена программа: " << duration.count() << " microseconds " << endl;
+	cout << "среднее время за которое была выполнена программа: " << duration.count() / 10 << " microseconds" << endl;
+
+	cout << endl << endl;
+
+
+
+
+	auto start2 = high_resolution_clock::now();
+	for (int r = 1; r <= 10; r++)
+	{
+
+		string str1;
+		string str2;
+		clock_t time1;
+		clock_t time2;
+
+
+		int start = 0;
+		int end = 0;
+		int i = 0, counter = 0, max_counter = 0, begin = 0, j = 0;
+		int maxindex = 0;
+
+		string vec;
+
+		time1 = clock();
+		ifstream file;
+		file.open("C:\\Users\\polik\\Desktop\\file.txt");
+		if (!file.is_open())
+		{
+			cout << " Ошибка открытия файла ввода ";
+			return 0;
+		}
+		else
+		{
+			getline(file, str1);
+		}
+		file.close();
+
+
+		do
+		{
+			for (i = begin; isalpha(str1[i]) && i < str1.size() - 1; i++) //если буква и i не конец строки
+			{
+				counter += 1; //счетчик по кол-ву букв в слове
+				if (counter >= max_counter)
+				{
+					max_counter = counter; // проверка максимальное ли кол-во
+				}
+			}
+
+			while (!isalpha(str1[i]) && i < str1.size() - 1) //если встречает НЕ букву
+			{
+				i += 1; //скипаем ячейку и обнуляем счетчик
+				counter = 0;
+			}
+
+			begin = i;
+
+		} while (i < str1.size() - 1);
+
+		begin = 0;
+
+		do
+		{
+			for (i = begin; isalpha(str1[i]) && i < str1.size() - 1; i++)
+			{
+				counter = counter + 1; // встречает букву - накидывает счетчик и как только счетчик будет равен максу то начинается иф
+
+
+				if (counter == max_counter) // если счетчик равен максимум
+				{
+
+					max_counter = counter;
+					end = i; //в вектор КОНЕЦ СЛОВА засовывает номер ячейки
+					start = (counter + 1);
+
+				} // это для того чтобы от номера 1й буквы слова до номера последней буквы слова пройтись потом
+			}
+
+
+			while (!isalpha(str1[i]) && i < str1.size() - 1) // если ноль то скипаем и обнуляем счетчик
+			{
+				i += 1;
+				counter = 0;
+			}
+			begin = i;
+
+
+		} while (i < str1.size() - 1);
+
+		cout << "Время в мкс: " << end;
+		cout << endl;
+		//cout << "Строка с файла: " << end;
+
+		for (i = 0; i < str1.size() - 1; i++) //вывод данных из файла
+		{
+			cout << str1[i];
+		}
+
+
+		for (int i = start; i < end; i++)
+		{
+			if (str1[i] == 'a')
+				str1[i] = 'b';
+		}
+
+
+		cout << endl;
+		cout << "Итоговая строка: " << endl;
+		for (int i = 0; i < str1.size() - 1; i++)
+		{
+			cout << str1[i]; // вывод с изменениями
+		}
+		cout << endl;
+		time2 = clock();
+		double time = (double)(time2 - time1) / CLOCKS_PER_SEC;
+
+		ofstream file2;
+
+		file.open("C:\\Users\\polik\\Desktop\\file2.txt");
+		if (!file.is_open())
+		{
+			cout << " Ошибка открытия файла вывода ";
+			return 0;
+		}
+
+		else
+		{
+			for (int i = 0; i < str1.size() - 1; i++)
+			{
+				file2 << str1[i]; //перезапись в файл
+				file2 << "время работы программы = " << time << endl;
+			}
+		}
+
+		file2.close();
+	}
+	auto stop2 = high_resolution_clock::now();
+	auto duration2 = duration_cast<microseconds>(stop2 - start2);
+	cout << " время за которое была выполнена 2-ая программа: " << duration2.count() << " microseconds " << endl;
+	cout << "среднее время за которое была выполнена программа: " << duration2.count() / 10 << " microseconds" << endl;
+	cout << endl;
+
+	if (duration.count() > duration2.count())   cout << "время 1-й программы > 2-й" << endl;
+	if (duration.count() < duration2.count())   cout << "время 1-й программы < 2-й" << endl;
+	if (duration.count() == duration2.count())   cout << "время 1-й программы = 2-й" << endl;
+
+	return 0; //возврат нулевого значения функции
+		}
+// PP4

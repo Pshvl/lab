@@ -1,0 +1,38 @@
+def function():
+    print('Input a filename>', end='')
+    file_name = input()
+
+    try:
+        file = open(file_name, 'rt')
+    except FileNotFoundError:
+        print('FileNotFoundError')
+        function()
+    else:
+        data = file.read()
+        print('Input a string to find>', end='')
+        word_to_find = input()
+        print('Input a string to replace>', end='')
+        word_to_replace = input()
+        data = data.replace(word_to_find, word_to_replace)
+        file.close()
+        file2 = open(file_name, 'wt')
+        file2.write(data)
+        file2.close()
+
+        print('Operation has been completed successfully')
+
+
+def censorship():
+    print('Censorship')
+    # обзывать функции надо так чтоб было понятно что она делает
+    function()
+    print('Continue? (Y/N) >', end='')
+    # проверка на всякую гадость
+    answer_YorN = input()
+
+    while answer_YorN == 'Y' or answer_YorN == 'y':
+        function()
+        print('Continue? (Y/N) >', end='')
+        answer_YorN = input()
+    else:
+        return 0

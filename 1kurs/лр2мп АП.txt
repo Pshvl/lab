@@ -1,0 +1,74 @@
+
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+int main()
+{
+	setlocale(LC_ALL, "Russian");
+
+
+	int otvet;
+	do
+	{
+		double alpha = 0; //точность
+		cout << "Введите значение точности > 0" << endl;
+		cin >> alpha;
+		while (alpha <= 0) //если точность не положительное число  
+		{
+			cout << "введите конкретное значение" << endl;
+			cin >> alpha;
+		}
+
+		double x = 0;
+		cout << "Введите значение X в диапозоне [-1; 1]" << endl;
+		cin >> x;
+		while (x < -1 || x>1) //если x не принадлежит диапозону -1 ≤ X ≥ 1
+		{
+			cout << "введите конкретное значение" << endl;
+			cin >> x;
+		}
+		double sum = 0;
+		double an = 0;
+		double n = 1; // число итераций
+		double alphan = 0; //точность в моменте
+		double an1 = 0;
+
+		if (alpha != int(alpha))
+
+			do
+			{
+				an = pow(-1, (n)) * (pow(x, (2 * n + 1)) * (1 + x * x)) / (2 * n + 1);
+				sum += an;
+				an1 = pow(-1, (n + 1)) * (pow(x, (2 * n + 3)) * (1 + x * x)) / (2 * n + 3);
+				alphan = abs(an1 / sum); //вычисляем точность в моменте 
+				cout << "n " << n << endl;
+				cout << "последний просуммированный член ряда " << an << endl;
+				cout << "текущая сумма " << sum << endl;
+				cout << "точность " << alphan << endl << endl;
+				++n;
+
+			} while (alphan > alpha);
+
+
+		else // если alpha int - число слагаемых 
+			do
+			{
+				an = pow(-1, (n)) * (pow(x, (2 * n + 1)) * (1 + x * x)) / (2 * n + 1);
+				sum += an;
+				an1 = pow(-1, (n + 1)) * (pow(x, (2 * n + 3)) * (1 + x * x)) / (2 * n + 3);
+				alphan = abs(an1 / sum);
+				cout << "n " << n << endl;
+				cout << "последний просуммированный член ряда " << an << endl;
+				cout << "текущая сумма " << sum << endl;
+				cout << "точность " << alphan << endl << endl;
+				++n;
+
+			} while (n <= alpha); //колво шагов стремится к заданной alpha
+
+			cout << "введите 1 , чтобы продолжить " << endl;
+			cin >> otvet;
+	} while (otvet == 1);
+	return 0;
+}

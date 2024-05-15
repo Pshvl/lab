@@ -1,0 +1,130 @@
+/*вар 20.  Пирамидальная сортировка (Heap) и Сортировка вставками (Insertion). Двусвязный нециклический список.	*/					
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <fstream>
+
+
+struct list {
+    int val; 
+    list* next;// Указатель на следующий узел списка
+    list* prev;// Указатель на предыдущий узел списка 
+};
+
+void insertList(list** head, list** last, int var, int& size) {  // Ф-ия вставки нового узла
+    list* add = new list;
+    add->val = var;
+    add->next = NULL;
+
+    if (*head == NULL) {
+        add->prev = NULL;
+        *head = add;
+    }
+
+    else {  // Добавляем новый элемент в конец списка
+        (*last)->next = add;
+        add->prev = *last;
+    }
+    *last = add;
+    size++;
+
+}
+
+void loadList(list** head, list** last, int& sizeList, int& sort, std:: string input) {   // Ф-ия загрузки списка из файла
+
+    std::ifstream file(input);
+    std::string line;
+    getline(file, line);
+    std::stringstream ab(line);
+    ab >> sort;     // Считываем выбранный тип сортировки
+
+    int var;
+    while (ab >> var) {
+        insertList(head, last, var, sizeList);
+    }
+    file.close();
+}
+
+void printList(list* head, int sizeList, std::string output) {  // Ф-ия вывода списка в файл
+    std::ofstream file2(output);
+    file2 << sizeList << " ";
+    list* h = head;
+    while (h != NULL) {
+        file2 << h->val << " ";
+        h = h->next;
+    }
+    file2.close();
+}
+
+
+void deleteList(list** head) {   // Ф-ия удаления списка
+    list* h = *head;
+    list* temp;
+    while (h != NULL) {
+        temp = h->next;
+        delete h;
+        h = temp;
+    }
+    *head = NULL;
+}
+
+void sortedInsert(struct list** head_link, struct list* add) {  //Сортировка вставками
+    struct list* real;
+
+    if (*head_link == NULL) // Если список пустой
+        *head_link = add;
+
+    else if ((*head_link)->val >= add->val) {  // Если узел должен быть вставлен в начало
+        add->next = *head_link;
+        add->next->prev = add;
+        *head_link = add;
+    }
+
+    else {
+        real = *head_link;
+
+        while (real->next != NULL && real->next->val < add->val)  // Найти узел, после которого должен быть вставлен новый узел
+            real = real->next; 
+
+        add->next = real->next;
+
+        if (real->next != NULL)
+            add->next->prev = add;
+
+        real->next = add;
+        add->prev = real;
+    }
+}
+
+void insertionSort(struct list** head_link)
+{
+    struct list* sorted = NULL;
+
+    struct list* real = *head_link;
+    while (real != NULL) {
+
+        struct list* next = real->next;
+        real->prev = real->next = NULL;
+
+        sortedInsert(&sorted, real);   //вставить текущий в "sorted" двусвязный список
+        real = next;
+    }
+    *head_link = sorted;   //  Обновить head_link, чтобы он указывал на отсортированный двусвязный список
+}
+
+int main() {
+    std::string input = "input.txt";
+    std::string output = "output.txt";
+
+    int sort = 0; 
+    int sizeList = 0;
+
+    list* head = NULL;
+    list* last = NULL;
+
+    loadList(&head, &last, sizeList, sort, input);
+    insertionSort(&head);
+    printList(head, sizeList, output);
+    deleteList(&head);
+}
+

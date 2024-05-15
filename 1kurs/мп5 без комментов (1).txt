@@ -1,0 +1,230 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+class timeOfWork
+{
+private:
+	int day, month, startTimeHours, startTimeMin, endTimeHours, endTimeMin;
+	string result, DM, startT, endT;
+
+public:
+	timeOfWork();
+	timeOfWork(int d, int m, int sTH, int sTM, int eTH, int eTM)
+	{
+		day = d;
+		month = m;
+		startTimeHours = sTH;
+		startTimeMin = sTM;
+		endTimeHours = eTH;
+		endTimeMin = eTM;
+	}
+	string ResFILE()
+	{
+		result = DM + " " + startT + " ";
+		return result;
+	}
+	string Res()
+	{
+		result = DM + " " + startT + " " + endT;
+		return result;
+	}
+	string durationOfWork()
+	{
+		int dur = endTimeMin + endTimeHours * 60 - startTimeMin - startTimeHours * 60;
+		if (dur >= 60)
+		{
+			result = to_string(dur / 60) + " hour(s) " + to_string(dur % 60) + " minute(s)";
+		}
+		else
+		{
+			result = to_string(dur) + " minutes";
+		}
+		return result;
+	}
+	~timeOfWork();
+	friend istream& operator>>(istream&, timeOfWork&);
+	friend ifstream& operator>> (ifstream&, timeOfWork&);
+	friend ostream& operator<< (ostream&, const timeOfWork&);
+	friend ofstream& operator<< (ofstream&, const timeOfWork&);
+};
+istream& operator>> (istream& in, timeOfWork& t) //перегрузка оператора извлечения из потока ввода в консоль
+{
+	string dayMonth, start, end, dM, dM1, s, s1, e, e1;
+	in >> dayMonth >> start >> end;
+
+	t.DM = dayMonth;
+	int posOfDot = dayMonth.find(".");
+	t.month = stoi(dM.assign(dayMonth, 0, posOfDot));
+	t.day = stoi(dM1.assign(dayMonth, posOfDot + 1, dayMonth.size()));
+
+	t.startT = start;
+	int posOfDoubleDot = start.find(":");
+	t.startTimeHours = stoi(s.assign(start, 0, posOfDoubleDot));
+	t.startTimeMin = stoi(s1.assign(start, posOfDoubleDot + 1, start.size()));
+
+	t.endT = end;
+	int posOfDD = end.find(":");
+	t.endTimeHours = stoi(e.assign(end, 0, posOfDD));
+	t.endTimeMin = stoi(e1.assign(end, posOfDD + 1, end.size()));
+
+	return in;
+}
+ifstream& operator>> (ifstream& in, timeOfWork& t)
+{
+	string s, dM, dM1, s1, s2, e, e1;
+	string sdm, sstm, setm;
+	getline(in, s);
+
+	int posOfNoth = s.find(" ");
+	int posOfDot = s.find(".");
+	t.DM.assign(s, 0, posOfNoth);
+	t.month = stoi(dM.assign(s, 0, posOfDot));
+	t.day = stoi(dM1.assign(s, posOfDot + 1, posOfNoth));
+
+	int posOfDoubleDot = s.find(":");
+	int posOfNothing = s.find(" ", posOfNoth + 1);
+	t.startT.assign(s, posOfNoth + 1, posOfNothing);
+	t.startTimeHours = stoi(s1.assign(s, posOfNoth + 1, posOfDoubleDot));
+	t.startTimeMin = stoi(s2.assign(s, posOfDoubleDot + 1, posOfNothing));
+
+	int posOfDD = s.find(":", posOfDoubleDot + 1);
+	t.endT.assign(s, posOfNothing + 1, s.size());
+	t.endTimeHours = stoi(e.assign(s, posOfNothing + 1, posOfDD));
+	t.endTimeMin = stoi(e1.assign(s, posOfDD + 1, s.size()));
+
+	return in;
+}
+ostream& operator<< (ostream& out, const timeOfWork& t) //перегрузка оператора помещения в поток вывода в консоль
+{
+	out << t.result << endl;
+	return out;
+}
+ofstream& operator<< (ofstream& out, const timeOfWork& t) //перегрузка оператора помещения в поток вывода в файл
+{
+	out << t.result;
+	return out;
+}
+
+timeOfWork::timeOfWork()
+{
+	day = month = startTimeHours = startTimeMin = endTimeHours = endTimeMin = 0;
+}
+timeOfWork::~timeOfWork()
+{
+}
+int check() //функция проверки вводимых вручную элементов массива
+{
+	int a;
+	while (!(cin >> a) || (cin.peek() != '\n')) //Считывает значение a. Если чтение завершается неудачно из-за ошибки ввода-вывода или если введенное значение не соответствует типу данныхx, cin переводится в состояние ошибки(False).
+	{
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cout << "Incorrect input. Try again: ";
+	}
+	return a;
+}
+void print(timeOfWork *t, timeOfWork *t2, int n)
+{ //вывод результата программы
+	int fl1;
+	cout << "Print to file? Yes = 1, No = another number: ";
+	cin >> fl1;
+
+	if (fl1 == 1)
+	{
+		ofstream out;
+		out.open("MP5OUTPUT.txt", ios::app);
+		out << "Objects of class: " << endl;
+		for (int i = 0; i < n; i++)
+		{
+			out << t[i] << endl;
+			//out << t2[i] << endl;
+		}
+		out << "Processed objects of class: "<< endl;
+		for (int i = 0; i < n; i++)
+		{
+			out << t2[i] << endl;
+			//out << t2[i] << endl;
+		}
+		out.close();
+	}
+	else
+	{
+		cout << "Objects of class: " << endl;
+		for (int i = 0; i < n; i++)
+		{
+			cout << t[i] << endl;
+			//out << t2[i] << endl;
+		}
+		cout << "Processed objects of class: " << endl;
+		for (int i = 0; i < n; i++)
+		{
+			cout << t2[i] << endl;
+			//out << t2[i] << endl;
+		}
+		//out.close();
+	}
+		//cout << t2 << endl;
+}
+int main()
+{
+	int y = 1;
+	while (y == 1)
+	{
+		ofstream out;
+		cout << "Do you want to input from file? Enter 1, if you want. Another number, if you don't want: ";
+		int fl = check();
+		out.open("MP5OUTPUT.txt", ios::out);
+		out.close();
+		if (fl == 1)
+		{
+			ifstream input;
+			input.open("MP5INPUT.txt");
+			if ((!input.is_open()) || (!input))
+				cout << "File cannot be open." << endl;
+			else
+			{
+				string n;
+				getline(input, n);
+				timeOfWork* tof = new timeOfWork[stoi(n)];
+				timeOfWork* newtof = new timeOfWork[stoi(n)];
+				for (int i = 0; i < stoi(n); ++i)
+				{
+					input >> tof[i];//попытка считать
+					newtof[i] = tof[i];
+					newtof[i].durationOfWork();
+					tof[i].ResFILE();
+				}
+				print(tof, newtof, stoi(n));
+				delete[]tof;
+				delete[]newtof;
+			}
+		}
+		else
+		{
+			cout << "Enter a count of working days: ";
+			int n = check();
+			timeOfWork* tof = new timeOfWork[n];
+			timeOfWork* newtof = new timeOfWork[n];
+			for (int i = 0; i < n; ++i)
+			{
+				cin >> tof[i];
+				if (!cin.fail())
+				{
+					newtof[i] = tof[i];
+					newtof[i].durationOfWork();
+					tof[i].Res();
+					//print(tof[i], newtof[i]);
+				}
+			}
+			print(tof, newtof, n);
+			delete[]tof;
+			delete[]newtof;
+		}
+		cout << "\nDo you want to continue? Enter 1, if you want. Another symbol, if you don't want: ";
+		cin >> y;
+		cout << endl;
+	}
+}

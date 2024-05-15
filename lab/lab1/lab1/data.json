@@ -1,0 +1,18 @@
+{
+    "vehicles": [
+        {
+          "type": "car",
+          "brand": "Toyota",
+          "model": "Corolla",
+          "year": 2018,
+          "isElectric": false
+        },
+        {
+          "type": "bike",
+          "brand": "Honda",
+          "model": "CBR500R",
+          "year": 2020,
+          "isElectric": true
+        }
+    ]
+}

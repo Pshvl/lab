@@ -1,0 +1,237 @@
+#include <fstream>
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+class plenty {
+private:
+    int SIZE;
+    vector <double> arr;
+public:
+    //конструктор по умолчанию
+    plenty() {
+        SIZE = 0;
+    }
+
+    //конструктор копирования
+    plenty(const plenty& point) {
+        SIZE = point.SIZE;
+        for (int i = 0; i < SIZE; ++i) arr.push_back(point.arr[i]);
+    }
+
+    //конструктор для инициализации объекта
+    plenty(int m, vector<double> Arr) {
+        SIZE = m;
+        arr = Arr;
+    }
+
+    //деструктор
+    ~plenty() { 
+        arr.clear();
+        SIZE = 0;
+    }
+
+    void set_size(int q) {
+        SIZE = q;
+    }
+
+    //добавление 
+    plenty push(plenty point, double m) {
+        ++point.SIZE;
+        vector<double> Arr = point.arr;
+        Arr.push_back(m);
+        plenty abs(point.SIZE, Arr);
+
+        return abs;
+    }
+
+    //удаление 
+    plenty deletion(plenty point, double m) {
+        vector<double> Arr;
+        for (int i = 0; i < point.SIZE; ++i)
+            if (point.arr[i] != m) {
+         Arr.push_back(point.arr[i]);
+            }
+        plenty abs(point.SIZE - 1, Arr);
+        return abs;
+    } 
+    
+    //пересечение
+    plenty operator* (plenty point) {
+        vector<double> gec;
+        for (int i = 0; i < SIZE; ++i) {
+            for (long unsigned int j = 0; j < point.arr.size(); ++j) {
+                if (arr[i] == point.arr[j]) { gec.push_back(arr[i]);
+                }
+            }
+        }
+        plenty abs(gec.size(), gec);
+        return abs;
+    }
+    
+    //разность
+    plenty operator- (plenty point) {
+        vector<double> gec;
+        bool flag = true;
+        for (int i = 0; i < SIZE; ++i) {
+            for (long unsigned int j = 0; j < point.arr.size(); ++j) {
+                if (arr[i] == point.arr[j]) { flag = false;
+                }
+            }
+            if (flag) gec.push_back(arr[i]);
+            flag = true;
+        }
+        plenty abs(gec.size(), gec);
+        return abs;
+    }
+
+    //объединение
+    plenty operator+ (plenty point) {
+        vector<double> gec(arr);
+        gec.insert(gec.end(), point.arr.begin(), point.arr.end());
+        for (long unsigned int i = 0; i < gec.size() - 1; ++i) {
+            for (long unsigned int j = i + 1; j < gec.size(); ++j) {
+                if (gec[i] == gec[j]) {
+                    gec.erase(gec.begin() + j);
+                    --j;
+                }
+            }
+        }
+        plenty abs(gec.size(), gec);
+        return abs;
+    }
+
+    //симметричная разность
+    plenty operator/ (plenty point) {
+        plenty abs = *this + point - *this * point;
+        return abs;
+    }
+
+    //оператор присваивания
+    plenty operator= (plenty point) {         
+        SIZE = point.SIZE;
+        arr = point.arr;
+        return *this;
+    }
+
+    //Оператор сравнения 
+    bool operator== (plenty point) {        
+        if (arr == point.arr) return true;
+        return false;
+    }
+    
+    //левое мн-во содержится в правом
+    bool operator< (plenty point) {     
+        if (arr != point.arr && (*this - point).SIZE == 0) return true;
+        return false;
+    }
+
+    //правое мн-во содержится в левом 
+    bool operator> (plenty point) {     
+        if (arr != point.arr && (point - *this).SIZE == 0) return true;
+        return false;
+    }
+
+    //правое мн-во содержится в левом или эквивалентно
+    bool operator>= (plenty point) {      
+        if (*this > point || *this == point) return true;
+        return false;
+    }
+
+    //левое мн-во содержится в правом или эквивалентно
+    bool operator<= (plenty point) {
+        if (point > *this || *this == point) return true;
+        return false;
+    }
+
+     friend istream& operator>> (istream& In, plenty& point); //перегрузка оператора ввода для объектов класса plenty.
+     friend ostream& operator<< (ostream& Out, const plenty& point); //перегрузка оператора вывода для объектов класса plenty
+     friend void checking_the_ratio(plenty first, plenty second, ofstream& Out);//объявление функции ratio
+};
+
+ostream& operator<< (ostream& Out, const plenty& point)
+{
+    for (int i = 0; i < point.SIZE; ++i) Out << point.arr[i] << ' ';
+    Out << endl;
+    return Out;
+}
+
+istream& operator>> (istream& In, plenty& point) {
+    double numeric = 0;
+    while (In.peek() != '\n') {
+        In >> numeric;
+        point.arr.push_back(numeric);
+    }
+    return In;
+}
+
+void checking_the_ratio(plenty first, plenty second, ofstream& Out) {
+    if (first == second)
+        Out << "Мн-ва эквивалентны" << endl;
+    else if (first > second)
+        Out << "Мн-во 2 является подмножеством мн-ва 1" << endl;
+    else if (first < second)
+        Out << "Мн-во 1 является подмножеством мн-ва 2" << endl;
+    else if ((first * second).SIZE)
+        Out << "Мн-ва пересекаются" << endl;
+    else
+        Out << "Мн-ва не пересекаются" << endl;
+}
+
+int main()
+{
+    ifstream file1("C:\\Users\\polik\\Desktop\\input.txt");
+    ofstream file2("C:\\Users\\polik\\Desktop\\output.txt");
+
+    plenty inst;
+    plenty point;
+    int key;
+    int Size;
+    int numeric;
+
+    file1 >> key >> Size >> point;
+    point.set_size(Size);
+ 
+    switch (key) {
+
+    case 1: 
+        file1 >> numeric;
+        point = point.push(point, numeric);
+        file2 << point;
+        break;
+
+    case 2:
+        file1 >> numeric;
+        point = point.deletion(point, numeric);
+        file2 << point;
+        break;
+
+    case 3:
+        file1 >> Size >> inst;
+        inst.set_size(Size);
+        file2 << point + inst;
+        break;
+
+    case 4:
+        file1 >> Size >> inst;
+        inst.set_size(Size);
+        checking_the_ratio(point, inst, file2);
+        break;
+
+    case 5:
+        file1 >> Size >> inst;
+        inst.set_size(Size);
+        if (inst >= point) {
+            file2 << "Мн-во 1 содержится в мн-ве 2 / мн-во 1 эквивалентно мн-ву 2";
+        }
+        else
+            file2 << "Мн-во 1 не содержится в мн-ве 2 / мн-во 1 не эквивалентно мн-ву 2";
+        break;
+    
+    }
+
+    file1.close();
+    file2.close();
+}

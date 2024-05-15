@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Per aspera ad astra</title>
+    <meta name="description"
+        content="Полезная информация по миру авторского комикса Per aspera ad astra, а также ответ на вопрос - может ли человек изменить судьбу." />
+    <link rel="stylesheet" href="proishozhdenuestyle.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="proishozhdenues.js"></script>
+</head>
+<body>
+    <div class="navbar fixed"><!—начало навигационной панели-->
+        <a class="name-sait" href="Титульник-ос.html">
+            <span title="Нажмите, чтобы вернуться на основную страницу"><b>༓ ༒ Astra-info.ru ༒ ༓</b></span>
+        </a>
+        <div class="dropdown">
+            <div class="dropbtn">
+                <a href="Главное.html">Главное</a>
+            </div>
+            <div class="dropdown-content">
+                <div class="menu">
+                    <a class="menu-item" href="Автор.html">
+                        <span class="menu-text">Об авторе</span>
+                    </a>
+                    <a class="menu-item" href="Главное.html">
+                        <span class="menu-text">О комиксе</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="dropdown">
+            <div class="dropbtn">
+                <a href="Сюжет.html">Сюжет</a>
+            </div>
+            <div class="dropdown-content">
+                <div class="menu">
+                    <a class="menu-item" href="Сюжет.html">
+                        <span class="menu-text">Главы</span>
+                    </a>
+                    <a class="menu-item" href="Роли.html">
+                        <span class="menu-text">Другое</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="dropdown">
+            <div class="dropbtn">
+                <a href="Персонажи.html" title="Нажмите, чтобы перейти к персонажам">Персонажи</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <div class="dropbtn">
+                <a href="Вселенная.html">Вселенная</a>
+            </div>
+            <div class="dropdown-content">
+                <div class="menu">
+                    <a class="menu-item" href="Миры.html">
+                        <span class="menu-text">Миры</span>
+                    </a>
+                    <a class="menu-item" href="Расы.html">
+                        <span class="menu-text">Расы</span>
+                    </a>
+                    <a class="menu-item" href="Происхождение.html">
+                        <span class="menu-text">Происхождение персонажей</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div><!--конец навигационной панели-->
+    <div class="pusto"><!--начало основной информации-->
+        <h1 class="name-of-the-comics-1"><sub>❍ ☾ ✩</sub> Через тернии к звёздам <sub>✩ ☽ ❍</sub></h1>
+    </div>
+    <div class="ostalnoi-container">
+        <p class="ostalnoi-infa"><b>Происхождение персонажей</b></p>
+        <div class="vnutry-ostalnoi">
+            <p class="ostalnoi-infa-1"><a class="razdel-1" href="Титульник-ос.html">Главная</a> / <a class="razdel-1"
+                    href="Вселенная.html">Вселенная</a> / Происхождение персонажей</p>
+        </div>
+    </div><!--конец основной информации-->
+    <table id="id-table" style="width: 1058px; " class="table"><!--начало таблицы-->
+            <tr class="header-row">
+            <th style="width: 3%; ">id</th>
+            <th style="width: 40%;" colspan="2">Имя персонажа</th>
+            <th style="width: 57%;">Название мира</th>
+            <th>Действие</th>
+        </tr>
+    </table><!--конец таблицы-->
+    <form id="addUserForm" class="form-wrapper"><!--начало формы-->
+        <fieldset style="height: 280px; width: 200px; color: maroon;">
+            <legend style="font-family: Comic Sans MS;text-align: center;font-size:100%;"><ins><b>
+                        Добавление/редактирование происхождения: </b></ins></legend>
+            <label for="fname">Имя персонажа:</label><br>
+            <select id="fname" name="fname" class="form-inputik" required>
+            </select><br>
+            <select id="lname" name="lname" class="form-inputik" required>
+            </select><br>
+            <label for="nmir">Мир:</label><br>
+            <select id="nmir" name="nmir" class="form-inputik" required>
+            </select><br><br>
+            <div class="submit-btn-wrapper">
+                <input id="submitBtn" type="submit" class="submit-btn" style="margin-left: 10px;" value="Добавить">
+            </div>
+        </fieldset>
+    </form><!--конец формы-->
+</body>
+</html>

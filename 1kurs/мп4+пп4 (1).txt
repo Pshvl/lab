@@ -1,0 +1,200 @@
+#include <fstream>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <chrono>
+#include <algorithm>
+
+using namespace std;
+using namespace std::chrono;
+
+void eraser(vector <char>& vec)
+{
+
+	int first = 0;
+	int second = 0;
+
+
+	for (int i = 0; i < vec.size() - 1; i++)
+	{
+		if (vec[i] == '?')
+		{
+			first = i;
+			i = vec.size() - 1; //замена брейка
+		}
+	}
+
+
+
+
+	for (int i = first + 1; i < vec.size() - 1; i++)
+	{
+		if (vec[i] == '?')
+		{
+			second = i;
+			i = vec.size() - 1;
+		}
+	}
+
+
+	for (int i = first; i < second; i++)
+	{
+		if (vec[i] == ' ')
+
+			vec.erase(vec.begin() + i);
+	}
+}
+//мп4
+
+void change(string& text)
+{
+
+	int start = 0;
+	
+	for (int i = 0; i < text.length(); i++)
+	{
+		if (text[i] == ' ')
+		{
+			start = i;
+			text[i] = '*';
+			for (int j = start + 1; j <= text.length(); j++)
+			{
+				if (text[j] == ' ')
+					text.erase(text.begin() + j);
+				else i = j;
+				j = text.length();
+			}
+		}
+	}
+}
+		//пп4
+
+		int main()
+		{
+			setlocale(LC_ALL, "Russian"); // подключение русского языка
+
+
+
+			auto start = high_resolution_clock::now();
+			for (int j = 1; j <= 10; j++)
+			{
+				cout << j << endl;
+
+				ifstream filein; //чтение
+
+				filein.open("C:\\Users\\polin\\OneDrive\\Рабочий стол\\in.txt");
+
+
+				while (!filein.is_open())
+				{
+					cout << "невозможно открыть файл" << endl;
+
+				}
+
+
+				vector <char> vec;
+				int n = vec.size();
+				cout << "исходный текст" << endl;
+				char c;
+				while (filein.get(c))
+				{
+
+					vec.push_back(c);
+					cout << c;
+				}
+				cout << endl;
+				filein.close();
+
+				eraser(vec);
+
+				ofstream fileout; //запись
+				fileout.open("C:\\Users\\polin\\OneDrive\\Рабочий стол\\out.txt");
+
+
+				while (!fileout.is_open())
+				{
+					cout << "невозможно открыть файл" << endl;
+				}
+				cout << "измененный текст" << endl;
+				for (int i = 0; i < vec.size(); i++)
+				{
+					fileout << vec[i];
+					cout << vec[i];
+				}
+				fileout.close();
+
+
+				cout << endl;
+
+			}
+			auto stop = high_resolution_clock::now();
+			auto duration = duration_cast<microseconds>(stop - start);
+			cout << " время за которое была выполнена программа: " << duration.count() << " microseconds " << endl;
+			cout << "среднее время за которое была выполнена программа: " << duration.count() / 10 << " microseconds" << endl;
+
+			cout << endl << endl;
+			//пп4
+			auto start2 = high_resolution_clock::now();
+			for (int j = 1; j <= 10; j++)
+			{
+
+				ifstream filein; //чтение
+
+				filein.open("C:\\Users\\polin\\OneDrive\\Рабочий стол\\in.txt");
+
+
+				while (!filein.is_open())
+				{
+					cout << "невозможно открыть файл" << endl;
+
+				}
+
+
+				string text;
+				cout << "исходный текст" << endl;
+				while (!filein.eof())
+				{
+					text = "";
+					getline(filein, text);
+					cout << text;
+				}
+				cout << endl;
+				filein.close();
+
+				change(text);
+
+
+				ofstream fileout; //запись
+				fileout.open("C:\\Users\\polin\\OneDrive\\Рабочий стол\\out.txt");
+
+
+				while (!fileout.is_open())
+				{
+					cout << "невозможно открыть файл" << endl;
+				}
+				cout << "измененный текст" << endl;
+				for (int i = 0; i < text.length(); i++)
+				{
+					fileout << text[i];
+					cout << text[i];
+				}
+				fileout.close();
+				cout << endl;
+			}
+			auto stop2 = high_resolution_clock::now();
+			auto duration2 = duration_cast<microseconds>(stop2 - start2);
+			cout << " время за которое была выполнена 2-ая программа: " << duration2.count() << " microseconds " << endl;
+			cout << "среднее время за которое была выполнена программа: " << duration2.count() / 10 << " microseconds" << endl;
+			cout << endl;
+
+			if (duration.count() > duration2.count())   cout << "время 1-й программы > 2-й" << endl;
+			if (duration.count() < duration2.count())   cout << "время 1-й программы < 2-й" << endl;
+			if (duration.count() == duration2.count())   cout << "время 1-й программы = 2-й" << endl;
+
+			return 0; //возврат нулевого значения функции
+		}
+
+
+		/*cout << "введите 1 для продолжения ввода чисел.любое другое число, чтобы закончить. " << endl;
+				cin >> ans;
+			} while (ans == 1);*/

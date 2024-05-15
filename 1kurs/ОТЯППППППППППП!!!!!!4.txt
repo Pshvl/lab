@@ -1,0 +1,356 @@
+/*
+Конструкция 7 - условный оператор.
+if <логическое выражение> then
+<операторы>
+[elseif <логическое выражение> then <операторы>]
+end
+
+Уровень 1
+< логическое выражение > → <операнд> | <операнд><операция сравнения><операнд>
+<операция сравнения> → < | > | <= | >= | = | <>
+<операнд> → <идентификатор> | <константа>
+<операторы> → <идентификатор> = <арифметическое выражение>
+<арифметическое выражение> → <операнд> |
+<арифметическое выражение><арифметическая операция><операнд>
+<арифметическая операция> → + | –
+*/
+// { "kw","co","eq","ao","sc","vl","id","wl","if","th","ei","en" };
+
+
+#include <iostream>
+#include <fstream>
+#include <ctype.h>
+#include <cstring>
+#include <vector>
+
+using namespace std;
+
+const char* types[] = { "kw","co","eq","ao","sc","vl","id","wl", "if", "th", "ei", "en" };
+enum states_automat { S, A, B, C, CO, a, b, ao, eq, sc3, sc, j, co1, r, t, c3, s3, u, ao2, E3, eq3, h, co5, ao3, eq2, sc2, co3, co4, e, E1, vl, f, aos, eqs, scs, co, co1s, COs, aos2, eqs2, scs2 };
+enum SyntState { S0, S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17, S18, err };
+
+const char* PosLex[]{ "if", "id vl", "th co", "id vl", "th", "id"," eq", "id vl", "ei ao en", "id vl", "id vl", "th co", "id vl", "th", "id", "eq", "id vl", "ao en", "id vl" };
+
+struct Lex
+{
+    int type;
+    char* lex;
+};
+
+states_automat matrix[9][5]
+{
+    // S,    A,    B,     C,   CO, 
+       a,    A,    C,     C,   f,      // буквы
+       b,    A,    B,     C,   c3,     // цыфры
+       ao,  aos,  aos2,  ao2,  ao3,    // /*+-
+       eq,  eqs,  eqs2,  eq2,  eq3,    // =
+       sc,  scs,  scs2,  sc2,  sc3,    // ;
+       co1, co1s,  h,    co5,   j,     // >
+       co,  COs,   u,    co4,  co3,    // <
+       S,    r,    vl,    e,    s3,    // \n \0 \r \t ' '
+       E1,   C,    C,     C,    E3,    // other
+};
+
+SyntState matrix_2[12][19]
+
+{
+    //S0    S1    S2    S3    S4    S5    S6    S7    S8    S9    S10    S11    S12    S13    S14    S15    S16    S17    S18 
+     err,    err,  err,  err,  err,  err,  err,  err,  err,  err,  err,   err,   err,   err,   err,   err,   err,   err,   err,  //kw 0
+     err,   err,  S3,   err,  err,  err,  err,  err,  err,  err,  err,   S12,   err,   err,   err,   err,   err,   err,   err,   //co 1 
+     err,   err,  err,  err,  err,  err,  S7,  err,   err,  err,  err,   err,   err,   err,   err,   S16,   err,   err,   err,   //eq 2 
+     err,   err,  err,  err,  err,  err,  err,  err,  S9,   err,  err,   err,   err,   err,   err,   err,   err,   S18,   err,   //ao 3 
+     err,   err,  err,  err,  err,  err,  err,  err,  err,  err,  err,   err,   err,   err,   err,   err,   err,   err,   err,   //sc 4
+     err,   S2,   err,  S4,   err,  err,  err,  S8,   err,  S8,   S11,   err,   S13,   err,   err,   err,   S17,   err,   S17,   //vl 5
+     err,   S2,   err,  S4,   err,  S6,   err,  S8,   err,  S8,   S11,   err,   S13,   err,   S15,   err,   S17,   err,   S17,   //id 6
+     err,   err,  err,  err,  err,  err,  err,  err,  err,  err,  err,   err,   err,   err,   err,   err,   err,   err,   err,   //wl 7
+     S1,    err,  err,  err,  err,  err,  err,  err,  err,  err,  err,   err,   err,   err,   err,   err,   err,   err,   err,   //if 8 
+     err,   err,  S5,   err,  S5,   err,  err,  err,  err,  err,  err,   S14,   err,   S14,   err,   err,   err,   err,   err,   //th 9
+     err,   err,  err,  err,  err,  err,  err,  err,  S10,  err,  err,   err,   err,   err,   err,   err,   err,   err,   err,   //ei 10 
+     err,   err,  err,  err,  err,  err,  err,  err,  S0,   err,  err,   err,   err,   err,   err,   err,   err,   S0,    err,   //en 11
+};
+
+void Synt_analis(vector <Lex>& LEX, ofstream& file2)
+{
+
+    SyntState curState = S0;
+    SyntState prevState;
+    int Cur = 0;
+    int Size = LEX.size();
+    while (Size-- && curState != err) {
+        prevState = curState;
+        curState = matrix_2[LEX[Cur].type][curState];
+        ++Cur;
+    }
+    if (curState == S0) {
+        file2 << "OK";
+        cout << "OK";
+    }
+    else if (curState == err) {
+        file2 << --Cur << " " << PosLex[prevState];
+        cout << Cur << ' ' << PosLex[prevState];
+    }
+    else {
+        file2 << Cur << " " << PosLex[curState];
+        cout << Cur << ' ' << PosLex[curState];
+    }
+}
+
+
+
+char* input_File() // Получение данных из файла "input.txt"
+{
+    ifstream file1("input.txt", ios::binary);
+    int Size = 0;
+    file1.seekg(0, ios::end); // Смещение = 0 от конца буфера потока
+
+    Size = file1.tellg();
+    file1.seekg(0, ios::beg); // Смещение = 0 от начала буфера потока
+    char* text = new char[(size_t)Size + 1];
+    file1.read(&text[0], Size);
+    text[Size] = '\0';
+    file1.close();
+    return text;
+}
+
+size_t whatLine(char c) // Функция возвращает индекс строки в матрице состояний (отсчёт с нуля)
+{
+    if (isalpha(c)) return 0;
+    if (isdigit(c)) return 1;
+    if (c == '*' || c == '/' || c == '+' || c == '-') return 2;
+    if (c == '=') return 3;
+    if (c == ';') return 4;
+    if (c == '>') return 5;
+    if (c == '<') return 6;
+    if (isspace(c) || iscntrl(c)) return 7;
+    return 8;
+}
+
+int is_keyword(const char* const str) // Проверка str на ключевое слово. Если ключевое слово, возвращает 0, иначе - 6.
+{
+    // Ключевое слово [kw]: not, and, or, if, then, elseif, end
+    if (!strcmp(str, "not")) return 0;
+    if (!strcmp(str, "and")) return 0;
+    if (!strcmp(str, "or")) return 0;
+    if (!strcmp(str, "if")) return 8;
+    if (!strcmp(str, "then")) return 9;
+    if (!strcmp(str, "elseif")) return 10;
+    if (!strcmp(str, "end")) return 11;
+    return 6;
+}
+void add(vector<Lex>& LEXUS, const char* const text, int FIRSTpos, int LASTpos, int type) // Создаёт слово с firstPos включительно по lastPos не включительно и добавляет его в вектор с проверками на ключевые слова и длину
+{
+    Lex word;
+    word.lex = new char[LASTpos - FIRSTpos + 1];
+    for (size_t i = FIRSTpos; i < (size_t)LASTpos; ++i)
+        word.lex[i - FIRSTpos] = text[i];
+    word.lex[LASTpos - FIRSTpos] = '\0';
+    if (type == 6) // Потенциальный id
+    {
+        word.type = is_keyword(word.lex); // Проверка на ключевое слово
+        if (word.type && (LASTpos - FIRSTpos > 5))
+            word.type = 7; // Если НЕ ключевое слово и длина больше 5, то wl
+    }
+    else if (type == 5) {
+        (atoi(word.lex) > 32768) ? word.type = 7 : word.type = 5;
+    } // Если id больше диапазона, то wl
+    else word.type = type;
+    LEXUS.push_back(word);
+}
+
+void lexical_analysis(const char* const text, vector<Lex>& result)
+{
+    int pos = 0; // Индекс текущего символа из текста
+    states_automat state = states_automat::S; // Установлено начальное состояние S
+    int FIRSTPos = -1; // Индекс начала палиндрома
+    do {
+        char curr_Char = text[pos]; // Текущий символ запоминаем
+        state = matrix[whatLine(curr_Char)][state]; // Меняем настроение
+        switch (state) {
+        case (S): // Ну тут дальше всё очень очевидно
+            break;
+        case (a): // Потенциальный id начался
+            FIRSTPos = pos;
+            state = A;
+            break;
+        case (b): // Потенциальное начало vl
+            FIRSTPos = pos;
+            state = B;
+            break;
+        case (r): // Конец потенциального id
+            add(result, text, FIRSTPos, pos, 6);
+            state = S;
+            break;
+        case (e): // Выход из ошибки. Добавляем кривую лексему и идём в состояние S
+            add(result, text, FIRSTPos, pos, 7);
+            state = S;
+            break;
+        case(vl): // Конец vl 
+            add(result, text, FIRSTPos, pos, 5);
+            state = S;
+            break;
+        case (ao): // Сейчас арифметическая операция. Всё до этого уже сохранено
+            add(result, text, pos, pos + 1, 3);
+            state = S;
+            break;
+        case (eq): // Сейчас =. Всё до этого уже сохранено
+            add(result, text, pos, pos + 1, 2);
+            state = S;
+            break;
+        case (sc): // Сейчас ;.Всё до этого уже сохранено
+            add(result, text, pos, pos + 1, 4);
+            state = S;
+            break;
+        case (co1): // Сейчас > .Всё до этого уже сохранено
+            add(result, text, pos, pos + 1, 1);
+            state = S;
+            break;
+        case (aos): // Арифметическая операция после константы(vl)
+            add(result, text, FIRSTPos, pos, 6);
+            state = S;
+            add(result, text, pos, pos + 1, 3);
+            break;
+        case (eqs): // операция = после константы(vl)
+            add(result, text, FIRSTPos, pos, 6);
+            state = S;
+            add(result, text, pos, pos + 1, 2);
+            break;
+        case (scs): // ; после константы(vl)
+            add(result, text, FIRSTPos, pos, 6);
+            state = S;
+            add(result, text, pos, pos + 1, 4);
+            break;
+        case (co1s): // операция > после константы(vl)
+            add(result, text, FIRSTPos, pos, 6);
+            state = S;
+            add(result, text, pos, pos + 1, 1);
+            break;
+        case(E1): // Некорректный символ. До него всё сохранено
+            state = C;
+            FIRSTPos = pos;
+            break;
+        case(co): // Операция <. До этого всё сохранено. Переход в состояние проверки "<>" или "< что-то"
+            FIRSTPos = pos;
+            state = CO;
+            break;
+        case(f): // Обработка ситуации, когда буква после <
+            add(result, text, FIRSTPos, pos, 1);
+            FIRSTPos = pos;
+            state = A;
+            break;
+        case(c3): // Обработка ситуации, когда цифра после <
+            add(result, text, FIRSTPos, pos, 1);
+            state = B;
+            break;
+        case(ao3): // Обработка ситуации, когда ao после <
+            add(result, text, FIRSTPos, pos, 1);
+            state = S;
+            add(result, text, pos, pos + 1, 3);
+            break;
+        case(eq3): // Обработка ситуации, когда = после <
+            add(result, text, FIRSTPos, pos, 1);
+            state = S;
+            add(result, text, pos, pos + 1, 2);
+            break;
+        case(sc3): // Обработка ситуации, когда ; после <
+            add(result, text, FIRSTPos, pos, 1);
+            state = S;
+            add(result, text, pos, pos + 1, 4);
+            break;
+        case(j): // После символа < встретился символ > (Сохраняем <> как ao)
+            add(result, text, FIRSTPos, pos + 1, 1);
+            state = S;
+            break;
+        case(s3): // Разделитель после <
+            add(result, text, FIRSTPos, pos, 1);
+            state = S;
+            break;
+        case(E3): // Некорректный символ после <
+            add(result, text, FIRSTPos, pos, 1);
+            FIRSTPos = pos;
+            state = C;
+            break;
+        case(COs): // < после id
+            add(result, text, FIRSTPos, pos, 6);
+            FIRSTPos = pos;
+            state = CO;
+            break;
+        case(u): // < после константы (vl)
+            add(result, text, FIRSTPos, pos, 5);
+            FIRSTPos = pos;
+            state = CO;
+            break;
+        case(h): // > после константы (vl)
+            add(result, text, FIRSTPos, pos, 5);
+            add(result, text, pos, pos + 1, 1);
+            state = S;
+            break;
+        case (aos2):// Арифметическая операция (ao) после константы (vl)
+            add(result, text, FIRSTPos, pos, 5);
+            state = S;
+            add(result, text, pos, pos + 1, 3);
+            break;
+        case (eqs2):// = после константы (vl)
+            add(result, text, FIRSTPos, pos, 5);
+            state = S;
+            add(result, text, pos, pos + 1, 2);
+            break;
+        case (scs2):// ; после константы (vl)
+            add(result, text, FIRSTPos, pos, 5);
+            state = S;
+            add(result, text, pos, pos + 1, 2);
+            break;
+        case (ao2): // Арифметическая операция после некорректной лексемы
+            add(result, text, FIRSTPos, pos, 7);
+            state = S;
+            add(result, text, pos, pos + 1, 3);
+            break;
+        case (eq2): // = после некорректной лексемы
+            add(result, text, FIRSTPos, pos, 7);
+            state = S;
+            add(result, text, pos, pos + 1, 2);
+            break;
+        case (sc2): // ; после некорректной лексемы
+            add(result, text, FIRSTPos, pos, 7);
+            state = S;
+            add(result, text, pos, pos + 1, 4);
+            break;
+        case (co5): // > после некорректной лексемы
+            add(result, text, FIRSTPos, pos, 7);
+            state = S;
+            add(result, text, pos, pos + 1, 1);
+            break;
+        case (co4): // < после некорректной лексемы
+            add(result, text, FIRSTPos, pos, 7);
+            FIRSTPos = pos;
+            state = CO;
+            break;
+        }
+    } while (text[pos++] != '\0');
+}
+
+void Save_File(vector<Lex>& LEXUS, ofstream& file2)
+{
+
+    for (size_t i = 0; i < LEXUS.size(); ++i)
+    {
+        file2 << LEXUS[i].lex << '[' << types[LEXUS[i].type] << ']' << ' ';
+        cout << LEXUS[i].lex << '[' << types[LEXUS[i].type] << ']' << ' ';
+    }
+    file2 << endl;
+    cout << endl;
+}
+
+int main()
+{
+    ofstream file2("output.txt");
+    
+    char* text = input_File();
+    vector<Lex> LEXUS;
+    lexical_analysis(text, LEXUS);
+    Save_File(LEXUS, file2);
+    Synt_analis(LEXUS, file2);
+    file2.close();
+    for (size_t i = 0; i < LEXUS.size(); ++i) delete LEXUS[i].lex;
+    delete[] text;
+    return 0;
+}

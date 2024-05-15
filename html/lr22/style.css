@@ -1,0 +1,44 @@
+body {
+    border-style: dashed;
+    background-color: lightpink;
+}
+
+h1 {
+    text-align: center;
+    color: mediumvioletred;
+    margin-left: 40px;
+    font-size: revert;
+}
+
+.content {
+    margin: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: /*space-around*/ center;
+    height: 100%;
+}
+
+.content-left {
+    color: firebrick;
+    margin: 30px;
+    padding: 10px;
+    width: 600px;
+    background-color: bisque;
+    border-radius: 50px;
+}
+
+.content-right {
+    width: 600px;
+    margin: 30px;
+    padding: 10px;
+    background-color: skyblue;
+    border-radius: 50px;
+}
+
+img.images {
+    margin: 10px;
+    width: 370px;
+    height: 370px;
+    border: 2px solid gray;
+    border-radius: 100px;
+}

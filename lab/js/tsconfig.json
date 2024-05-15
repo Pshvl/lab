@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+      "composite": true,
+      "outDir": "./dist",
+      "rootDir": "src",
+      "declaration": true,
+      "noImplicitAny": true,
+      "esModuleInterop": true,
+      "module": "commonjs",
+      "experimentalDecorators": true,
+      "target": "ES5",
+      "types": [
+        "node"
+     ],
+      "lib": [
+        "es6",
+        "dom"
+      ]
+   },
+   
+    "exclude": [
+      "node_modules",
+      "dist"
+    ]
+
+  }
+ 

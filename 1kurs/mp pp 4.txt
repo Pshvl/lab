@@ -1,0 +1,198 @@
+
+#include <fstream>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <chrono>
+#include <algorithm>
+
+using namespace std;
+using namespace std::chrono;
+
+void eraser(vector <char>& vec)
+{
+
+	int start = 0;
+	int end = 0;
+
+
+	for (int i = 0; i < vec.size() - 1; i++)
+	{
+		if (vec[i] == 'a')
+     		vec[i] = 'b';
+		{
+			start = i;
+			i = vec.size() - 1; //замена брейка
+		}
+	}
+
+	for (int i = start + 1; i < vec.size() - 1; i++)
+	{
+		if (vec[i] == 'a')
+			vec[i] = 'b';
+		{
+			end = i;
+			i = vec.size() - 1;
+		}
+	}
+
+
+	for (int i = start; i < end; i++)
+	{
+		if (vec[i] == ' ')
+
+			vec.erase(vec.begin() + i);
+	}
+}
+//мп4
+
+void change(string vec)
+{
+
+	int start = 0;
+	int end = 0;
+
+
+	for (i = 0; i < str1.size() - 1; i++) //вывод данных из файла
+	{
+
+		cout << str1[i];
+	}
+	
+	
+	for (int i = start; i < end; i++)
+	{
+		if (str1[i] == 'a')
+			str1[i] = 'b'
+	}
+	for (int i = 0; i < str1.size() - 1; i++)
+	{
+		cout << str1[i]; // вывод с изменениями
+	}
+}
+//пп4
+
+int main()
+{
+	setlocale(LC_ALL, "Russian"); // подключение русского языка
+
+
+
+	auto start = high_resolution_clock::now();
+	for (int j = 1; j <= 10; j++)
+	{
+		cout << j << endl;
+
+		ifstream file; //чтение
+
+		file.open("C:\\Users\\polik\\Desktop\\file.txt");
+
+
+		while (!file.is_open())
+		{
+			cout << "невозможно открыть файл" << endl;
+
+		}
+
+
+		vector <char> vec;
+		int n = vec.size();
+		cout << "исходный текст" << endl;
+		char c;
+		while (file.get(c))
+		{
+
+			vec.push_back(c);
+			cout << c;
+		}
+		cout << endl;
+		file.close();
+
+		eraser(vec);
+
+		ofstream file2; //запись
+		file2.open("C:\\Users\\polik\\Desktop\\file2.txt");
+
+
+		while (!file2.is_open())
+		{
+			cout << "невозможно открыть файл" << endl;
+		}
+		cout << "измененный текст" << endl;
+		for (int i = 0; i < vec.size(); i++)
+		{
+			file2 << vec[i];
+			cout << vec[i];
+		}
+		file2.close();
+
+
+		cout << endl;
+
+	}
+	auto stop = high_resolution_clock::now();
+	auto duration = duration_cast<microseconds>(stop - start);
+	cout << " время за которое была выполнена программа: " << duration.count() << " microseconds " << endl;
+	cout << "среднее время за которое была выполнена программа: " << duration.count() / 10 << " microseconds" << endl;
+
+	cout << endl << endl;
+	//пп4
+	auto start2 = high_resolution_clock::now();
+	for (int j = 1; j <= 10; j++)
+	{
+
+		ifstream file; //чтение
+
+		file.open("C:\\Users\\polik\\Desktop\\file.txt");
+
+
+		while (!file.is_open())
+		{
+			cout << "невозможно открыть файл" << endl;
+
+		}
+
+
+		string text;
+		cout << "исходный текст" << endl;
+		while (!file.eof())
+		{
+			text = "";
+			getline(file, text);
+			cout << text;
+		}
+		cout << endl;
+		file.close();
+
+		change(text);
+
+
+		ofstream file2; //запись
+		file2.open("C:\\Users\\polik\\Desktop\\file2.txt");
+
+
+		while (!file2.is_open())
+		{
+			cout << "невозможно открыть файл" << endl;
+		}
+		cout << "измененный текст" << endl;
+		for (int i = 0; i < text.length(); i++)
+		{
+			file2 << text[i];
+			cout << text[i];
+		}
+		file2.close();
+		cout << endl;
+	}
+	auto stop2 = high_resolution_clock::now();
+	auto duration2 = duration_cast<microseconds>(stop2 - start2);
+	cout << " время за которое была выполнена 2-ая программа: " << duration2.count() << " microseconds " << endl;
+	cout << "среднее время за которое была выполнена программа: " << duration2.count() / 10 << " microseconds" << endl;
+	cout << endl;
+
+	if (duration.count() > duration2.count())   cout << "время 1-й программы > 2-й" << endl;
+	if (duration.count() < duration2.count())   cout << "время 1-й программы < 2-й" << endl;
+	if (duration.count() == duration2.count())  cout << "время 1-й программы = 2-й" << endl;
+
+	return 0; //возврат нулевого значения функции
+}
