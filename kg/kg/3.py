@@ -1,6 +1,4 @@
 import numpy as np
-import random
-from random import randint
 from PIL import Image
 import math
 
