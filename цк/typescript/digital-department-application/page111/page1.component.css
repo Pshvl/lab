@@ -1,0 +1,41 @@
+/* .submit-button{
+    border:0px;
+    border-radius: 5px;
+    padding: 10px 15px;
+    background-color: rgb(157, 1, 79);
+    color: rgb(255, 237, 246);
+    font-family: Verdana;
+    font-size:14px;
+}
+.pink-input{
+    border:1px rgb(151, 0, 75) solid;
+    border-radius: 5px;
+    color: rgb(151, 0, 75);
+    padding: 5px;
+    margin:10px;
+}
+.pink-input:focus{
+    outline: 2px rgb(151, 0, 75) solid;
+}
+.form{
+    margin: 10px;
+    color:rgb(157, 1, 79);
+    font-family: Verdana;
+} */
+
+.gallery{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+img{
+    width: 300px;
+    height: 200px;
+    margin: 10px;
+}
+
+p{
+    text-align: center;
+    margin: 10px;
+}

@@ -1,0 +1,17 @@
+[
+    {
+        "id": 1,
+        "name": "Хинкали",
+        "inStock": true
+    },
+    {
+        "id": 2,
+        "name": "Хачапури",
+        "inStock": true
+    },
+    {
+        "id": 3,
+        "name": "Шашлык",
+        "inStock": false
+    }
+]

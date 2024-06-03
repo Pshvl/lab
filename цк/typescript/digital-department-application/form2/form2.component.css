@@ -1,0 +1,108 @@
+.content{
+    display: flex;
+    margin: 15px;
+    align-items: flex-start;
+}
+.page-header{
+    text-align: center;
+}
+.form{
+    margin:10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color:rgb(157, 1, 79);
+    font-family: Verdana;
+    position:sticky;
+    top:58px;
+}
+form{
+    background-color: rgb(255, 228, 241);
+    padding:20px;
+    border-radius: 10px;
+}
+.submit-button{
+    border:0px;
+    border-radius: 5px;
+    padding: 10px 15px;
+    background-color: rgb(157, 1, 79);
+    color: rgb(255, 237, 246);
+    font-family: Verdana;
+    font-size:14px;
+}
+.pink-input{
+    border:1px rgb(151, 0, 75) solid;
+    border-radius: 5px;
+    color: rgb(151, 0, 75);
+    padding: 5px;
+    margin:10px;
+}
+.pink-input:focus{
+    outline: 2px rgb(151, 0, 75) solid;
+}
+
+table{
+    border-radius: 15px;
+}
+table, th, td{
+    margin-right:auto;
+    margin-left:auto;
+    font-size: 14pt;
+    font-family:"Verdana";
+    border-spacing: 0px;
+}
+th,td{
+    padding:15px;
+}
+th{
+    color:rgb(151, 0, 75);
+    background: rgb(241, 133, 182);
+    border-bottom: 2px solid rgb(151, 0, 75);
+    border-top: 2px solid rgb(151, 0, 75);
+    position: sticky;
+    top:118px;
+}
+th:first-child{
+    border-left: 2px solid rgb(151, 0, 75);
+}
+th:last-child{
+    border-right: 2px solid rgb(151, 0, 75);
+}
+table tr:last-child td:first-child {
+    border-bottom-left-radius: 10px;
+}
+    
+table tr:last-child td:last-child {
+    border-bottom-right-radius: 10px;
+}
+
+.age{
+    text-align: center;
+    width: 40px;
+}
+td{
+    color:rgb(157, 1, 79);
+}
+tr:nth-child(even){
+    background: rgb(255, 228, 241);
+}
+tr:nth-child(odd){
+    background: rgb(255, 209, 232);
+}
+tr:hover{
+    background: rgb(255, 182, 217);
+}
+td:hover{
+    background: rgb(251, 156, 202);
+}
+
+caption{
+    font-size:30pt;
+    font-weight: bold;
+    padding:10px;
+    color: rgb(151, 0, 75);
+    position: sticky;
+    top:50px;
+    background: rgb(255, 182, 219);
+}

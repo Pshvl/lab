@@ -1,0 +1,223 @@
+//#pragma comment(lib, "Ws2_32.lib")
+////bpv
+//#include <WinSock2.h>
+//#include <WS2tcpip.h>
+//#include <iostream>
+//#include <vector>
+//#include <queue>
+//#include <thread>
+//#include <mutex>
+//#include <condition_variable>
+//#include <Windows.h>
+//#include <atomic>
+//#include <string>
+//#include <cstdlib>
+//
+//SOCKET Listen = INVALID_SOCKET;
+//std::vector<SOCKET> Connections;
+//std::queue<SOCKET> ClientQueue;
+//std::mutex queueMutex;
+//std::condition_variable queueCondition;
+//std::atomic<bool> ServerRunning(true);
+//
+////void SendMessageToClient(int ID) {
+////    //корректность айди
+////    if (ID < 0 || ID >= Connections.size()) {
+////        std::cerr << "Invalid client ID.\n";
+////        return;
+////    }
+////
+////    char buffer[1024];
+////
+////    while (ServerRunning.load()) { // Если сервер работает
+////        memset(buffer, 0, sizeof(buffer));
+////
+////        int result = recv(Connections[ID], buffer, sizeof(buffer), 0);
+////        if (result > 0) { // Если получили данные
+////            std::cout << "Client " << ID << ": " << buffer << std::endl;
+////
+////            // Рассылка всем подключенным клиентам, кроме отправителя
+////            for (size_t i = 0; i < Connections.size(); i++) {
+////                if (i != ID && Connections[i] != INVALID_SOCKET) {
+////                    send(Connections[i], buffer, strlen(buffer), 0);
+////                }
+////            }
+////
+////        }
+////        else if (result == 0) { // Если клиент отключился
+////            std::cout << "Client " << ID << " disconnected.\n";
+////            {
+////                std::lock_guard<std::mutex> lock(queueMutex);
+////                Connections[ID] = INVALID_SOCKET; // Освобождаем слот
+////            }
+////
+////            // Если есть клиенты в очереди, подключаем их
+////            {
+////                std::unique_lock<std::mutex>  (queueMutex);
+////                if (!ClientQueue.empty()) {
+////
+////                    SOCKET nextClient = ClientQueue.front();
+////                    ClientQueue.pop();
+////                    Connections[ID] = nextClient;
+////                    std::cout << "New client connected from queue.\n";
+////                    std::thread(SendMessageToClient, ID).detach(); // Новый поток
+////                }
+////            }
+////
+////            break; 
+////        }
+////        else { // Ошибка
+////            std::cerr << "Receive error: " << WSAGetLastError() << std::endl;
+////            break;
+////        }
+////    }
+////}
+//
+//void SendMessageToClient(int ID) {
+//    // Корректность айди
+//    if (ID < 0 || ID >= Connections.size()) {
+//        std::cerr << "Invalid client ID.\n";
+//        return;
+//    }
+//
+//    char buffer[1024];
+//    std::string message; // Строка для накопления сообщения
+//
+//    while (ServerRunning.load()) { // Если сервер работает
+//        memset(buffer, 0, sizeof(buffer));
+//
+//        // Принимаем сообщение от клиента
+//        int result = recv(Connections[ID], buffer, sizeof(buffer), 0);
+//        if (result > 0) { // Если получили данные
+//            // Добавляем полученные данные в строку message
+//            message.append(buffer, result);
+//
+//            // Проверяем, есть ли в строке символ конца строки
+//            if (message.find('\n') != std::string::npos) {
+//                std::cout << "Client " << ID << ": " << message << std::endl;
+//                message.clear(); // Очищаем строку после отправки
+//
+//                // Рассылка всем подключенным клиентам, кроме отправителя
+//                for (size_t i = 0; i < Connections.size(); i++) {
+//                    if (i != ID && Connections[i] != INVALID_SOCKET) {
+//                        send(Connections[i], message.c_str(), message.length(), 0);
+//                    }
+//                }
+//            }
+//        }
+//        else if (result == 0) { // Если клиент отключился
+//            std::cout << "Client " << ID << " disconnected.\n";
+//            {
+//                std::lock_guard<std::mutex> lock(queueMutex);
+//                Connections[ID] = INVALID_SOCKET; // Освобождаем слот
+//            }
+//
+//            // Если есть клиенты в очереди, подключаем их
+//            {
+//                std::unique_lock<std::mutex>(queueMutex);
+//                if (!ClientQueue.empty()) {
+//                    SOCKET nextClient = ClientQueue.front();
+//                    ClientQueue.pop();
+//                    Connections[ID] = nextClient;
+//                    std::cout << "New client connected from queue.\n";
+//                    std::thread(SendMessageToClient, ID).detach(); // Новый поток
+//                }
+//            }
+//
+//            break;
+//        }
+//        else { // Ошибка
+//            std::cerr << "Receive error: " << WSAGetLastError() << std::endl;
+//            break;
+//        }
+//    }
+//}
+//
+//
+//
+//int main() {
+//    //system("color 32"); // Устанавливаем цвет фона окна консоли
+//
+//    setlocale(LC_ALL, "rus");
+//
+//    WSAData wsaData;
+//    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) { 
+//        std::cerr << "WSAStartup failed.\n";
+//        return 1;
+//    }
+//
+//    addrinfo hints = {};// информация об адресе
+//    hints.ai_family = AF_INET; 
+//    hints.ai_flags = AI_PASSIVE; //получить информацию об адресе
+//    //tcp socket
+//    hints.ai_socktype = SOCK_STREAM;
+//    hints.ai_protocol = IPPROTO_TCP;
+//
+//    addrinfo* result;
+//    if (getaddrinfo(nullptr, "7770", &hints, &result) != 0) { //поиск инф.(локальный хост, порт 7770, 
+//        std::cerr << "getaddrinfo failed.\n";
+//        return 1;
+//    }
+//                           //семейство      //тип                   //протокол
+//    Listen = socket(result->ai_family, result->ai_socktype, result->ai_protocol); // режим прослушивания
+//    // новый сокет
+//    if (Listen == INVALID_SOCKET) {
+//        std::cerr << "Socket creation failed.\n";
+//        //освобождаются ресурсы 
+//        freeaddrinfo(result);
+//        WSACleanup();
+//        return 1;
+//    }
+//
+//    if (bind(Listen, result->ai_addr, result->ai_addrlen) == SOCKET_ERROR) { //связывает 
+//        std::cerr << "Bind failed.\n";
+//        freeaddrinfo(result);
+//        closesocket(Listen);
+//        WSACleanup();
+//        return 1;
+//    }
+//
+//    freeaddrinfo(result);
+//
+//    //SOMAXCONN`: максимальное количество соединений, которые могут быть поставлены в очередь ожидания.
+//    if (listen(Listen, SOMAXCONN) == SOCKET_ERROR) {
+//        std::cerr << "Listen failed.\n";
+//        closesocket(Listen);
+//        WSACleanup();
+//        return 1;
+//    }
+//
+//    std::cout << "Server started...\n";
+//
+//    while (ServerRunning.load()) { 
+//        SOCKET newClient = accept(Listen, nullptr, nullptr);  // Принимаем новое подключение
+//        if (newClient == INVALID_SOCKET) {
+//            std::cerr << "Accept failed: " << WSAGetLastError() << std::endl;
+//            continue;
+//        }
+//
+//        // Получение имени первого клиента
+//        if (Connections.empty()) {
+//            char nameBuffer[1024];
+//            int nameResult = recv(newClient, nameBuffer, sizeof(nameBuffer), 0);
+//            if (nameResult > 0) {
+//                for (size_t i = 0; i < Connections.size(); i++) {
+//                    if (Connections[i] != INVALID_SOCKET) {
+//                        send(Connections[i], nameBuffer, strlen(nameBuffer), 0);
+//                    }
+//                }
+//            }
+//            else {
+//                std::cerr << "Error receiving name from the first client.\n";
+//            }
+//        }
+//
+//        Connections.push_back(newClient); // Добавляем новое подключение
+//        std::thread(SendMessageToClient, Connections.size() - 1).detach(); // Новый поток для нового клиента
+//    }
+//
+//    // Очистка ресурсов при завершении программы
+//    closesocket(Listen); 
+//    WSACleanup(); 
+//    return 0;
+//}

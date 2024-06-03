@@ -1,0 +1,7 @@
+<h1 class="page-header">Блюда</h1>
+
+<div>
+    <ul>
+        <li *ngFor ="let d of dishes">{{d.id}} - {{d.name}} - {{(d.inStock)?("В наличии"):("Нет в наличии")}}</li>
+    </ul>
+</div>

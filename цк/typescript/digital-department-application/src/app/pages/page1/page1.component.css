@@ -1,0 +1,25 @@
+.page-header {
+    text-align: center;
+  }
+  
+  .gallery {
+    display: flex; /* Для базового отображения в ряд */
+    flex-wrap: wrap; /* На случай, если элементов много */
+    justify-content: center;
+  }
+  
+  .photo-container {
+    margin: 10px;
+    border: 5px solid #503613; /* Рамка */
+    padding: 10px; /* Отступ внутри рамки */
+    border-radius: 10px; /* Закругленные углы */
+    text-align: center;
+    width: 220px; /* Ширина контейнера с учетом рамки и отступов */
+    background-color: antiquewhite;
+  }
+  
+  .photo-container img {
+    width: 200px;
+    height: 200px;
+  }
+  

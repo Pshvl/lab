@@ -1,0 +1,20 @@
+body{
+    background:rgb(245, 217, 142);
+    margin:0px;
+    padding:0px;
+    font-family:"Verdana";
+    font-size: 14pt;
+    color: rgb(80, 68, 37);
+}
+h1, h2{
+    font-family:"Verdana";
+    color:rgb(132, 94, 57);
+    margin: 10px 0px;
+}
+div{
+
+    margin: 0px;
+}
+.page-header{
+    text-align: center;
+}

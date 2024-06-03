@@ -1,0 +1,19 @@
+body{
+    background:rgb(243, 197, 128);
+    margin:0px;
+}
+.header{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: sticky;
+    top:0;
+    padding: 0px 10px;
+    height: 50px;
+    background:rgb(132, 94, 57)
+
+}
+.header a{
+    color: rgb(243, 197, 128); 
+    margin: 0px 10px;
+}

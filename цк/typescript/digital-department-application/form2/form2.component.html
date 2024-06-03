@@ -1,0 +1,44 @@
+
+<h1 class="page-header">Template-driven форма</h1>
+<div class="content">
+    <table>
+        <caption>Котята</caption>
+        <tr>
+            <th>Имя</th>
+            <th>Пол</th>
+            <th>Возраст (мес.)</th>
+            <th>Порода</th>
+        </tr>
+        <tr *ngFor="let k of kittens">
+            <td>{{k.name}}</td>
+            <td>{{k.gender}}</td>
+            <td class="age">{{k.age}}</td>
+            <td>{{k.type}}</td>
+        </tr>
+    </table>
+
+    <div class="form">
+        <h2>!Форма будет доработана позже!</h2>
+        <h2>Добавить нового котёнка:</h2>
+        <form>
+            <label for="name">Имя:</label>
+            <input class="pink-input" type="text" id="name" name="name" [(ngModel)]="name" (ngModelChange)="onNameChange()"> <br>
+            <div style="margin:10px 0px;">
+                <label for="girl">Пол:</label>
+                <input type="radio" id="girl" name="gender" [(ngModel)]="gender" value="Девочка">
+                <label for="girl">Девочкa</label>
+                <input type="radio" id="boy" name="gender" [(ngModel)]="gender" value="Мальчик">
+                <label for="boy">Мальчик</label> <br>
+            </div>
+
+            <label for="age">Возраст (мес.):</label>
+            <input class="pink-input" type="number" id="age" name="age" [(ngModel)]="age"><br>
+        
+            <label for="type">Порода:</label>
+            <input class="pink-input" type="text" id="type" name="type" [(ngModel)]="type"> <br>
+        
+            <button class="submit-button" (click)="addKitten()">Отправить</button>
+        </form>
+        
+    </div>
+</div>
